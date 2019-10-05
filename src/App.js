@@ -15,16 +15,16 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
 
-const TestPage = (props) => {
-  console.log(props);
-  return (
-    <div>
-      <button onClick={() => props.history.push('testPage')}>TestPage</button>
-      <Link to='/testPage/'>testPage</Link>
-      <h1>TEST PAGE: {props.match.params.topicId}</h1>
-    </div>
-  )
-}
+// const TestPage = (props) => {
+//   console.log(props);
+//   return (
+//     <div>
+//       <button onClick={() => props.history.push('testPage')}>TestPage</button>
+//       <Link to='/testPage/'>testPage</Link>
+//       <h1>TEST PAGE: {props.match.params.topicId}</h1>
+//     </div>
+//   )
+// }
 
 class App extends React.Component {
   unsubscribeFromAuth = null
@@ -60,7 +60,7 @@ class App extends React.Component {
           <Route path='/shop' component={ShopPage} />
           <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/'/>) : (<SignInSignUpPage />)}/>
-          <Route path='/testPage/:topicId' component={TestPage} />
+          {/* <Route path='/testPage/:topicId' component={TestPage} /> */}
         </Switch>
       </div>
     );
