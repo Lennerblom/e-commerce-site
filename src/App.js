@@ -12,25 +12,17 @@ import SignInSignUpPage from './pages/sign-in-sign-up.component/sign-in-sign-up.
 import CheckoutPage from './pages/checkout/checkout.component';
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+// ADDING SHOP DATA TO FIREBASE import { auth, createUserProfileDocument, addCollectionsAndDocuments } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
-
-// const TestPage = (props) => {
-//   console.log(props);
-//   return (
-//     <div>
-//       <button onClick={() => props.history.push('testPage')}>TestPage</button>
-//       <Link to='/testPage/'>testPage</Link>
-//       <h1>TEST PAGE: {props.match.params.topicId}</h1>
-//     </div>
-//   )
-// }
+//  ADDING SHOP DATA TO FIREBASE import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
 class App extends React.Component {
   unsubscribeFromAuth = null
 
   componentDidMount() {
     const {setCurrentUser} = this.props;
+    //  ADDING SHOP DATA TO FIREBASE  const {setCurrentUser, collectionsArray} = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth){
      const userRef = await createUserProfileDocument(userAuth);
@@ -44,7 +36,8 @@ class App extends React.Component {
     }
 
     setCurrentUser(userAuth);
-  });
+  //   addCollectionsAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })))
+      });
   }
 
   componentWillUnmount() {
@@ -68,7 +61,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector ({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  // ADDING SHOP DATA TO FIREBASE collectionsArray: selectCollectionsForPreview
 });
 
 const mapDispatchToProps = dispatch => ({
