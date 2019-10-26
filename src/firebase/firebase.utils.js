@@ -2,7 +2,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 
-
 const config = {
     apiKey: "AIzaSyBMIuFJAVDGJ-q6WAt6I0EH3kAo8qyv0MI",
     authDomain: "e-commerce-site-32092.firebaseapp.com",
@@ -68,6 +67,15 @@ export const convertCollectionsSnapshotToMap = (collections) => {
     return accumulator;
   } , {});
 };
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged(userAuth => {
+      unsubscribe();
+      resolve(userAuth);
+    }, reject);
+  });
+}
 
   firebase.initializeApp(config);
 

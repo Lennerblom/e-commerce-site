@@ -12,12 +12,14 @@ import SignInSignUpPage from './pages/sign-in-sign-up.component/sign-in-sign-up.
 import CheckoutPage from './pages/checkout/checkout.component';
 
 import { selectCurrentUser } from './redux/user/user.selector';
+import { checkUserSession } from './redux/user/user.actions';
 
 class App extends React.Component {
   unsubscribeFromAuth = null
 
   componentDidMount() {
-
+    const { checkUserSession } = this.props;
+    checkUserSession();
     //  ADDING SHOP DATA TO FIREBASE  const {setCurrentUser, collectionsArray} = this.props;
     // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
     // if(userAuth){
@@ -56,7 +58,10 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector ({
   currentUser: selectCurrentUser,
-
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
