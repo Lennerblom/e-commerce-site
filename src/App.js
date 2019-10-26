@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Link, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -11,33 +11,30 @@ import Header from './components/header/header.component';
 import SignInSignUpPage from './pages/sign-in-sign-up.component/sign-in-sign-up.component';
 import CheckoutPage from './pages/checkout/checkout.component';
 
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-// ADDING SHOP DATA TO FIREBASE import { auth, createUserProfileDocument, addCollectionsAndDocuments } from './firebase/firebase.utils';
-import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
-//  ADDING SHOP DATA TO FIREBASE import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
+import { checkUserSession } from './redux/user/user.actions';
 
 class App extends React.Component {
   unsubscribeFromAuth = null
 
   componentDidMount() {
-    const {setCurrentUser} = this.props;
+    const { checkUserSession } = this.props;
+    checkUserSession();
     //  ADDING SHOP DATA TO FIREBASE  const {setCurrentUser, collectionsArray} = this.props;
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if(userAuth){
-     const userRef = await createUserProfileDocument(userAuth);
-       userRef.onSnapshot(snapShot => {
-         setCurrentUser({
-           id: snapShot.id,
-           ...snapShot.data()
-         })
-       });
+    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    // if(userAuth){
+    //  const userRef = await createUserProfileDocument(userAuth);
+    //    userRef.onSnapshot(snapShot => {
+    //      setCurrentUser({
+    //        id: snapShot.id,
+    //        ...snapShot.data()
+    //      })
+    //    });
+    // }
 
-    }
-
-    setCurrentUser(userAuth);
+    // setCurrentUser(userAuth);
   //   addCollectionsAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })))
-      });
+      // });
   }
 
   componentWillUnmount() {
@@ -53,7 +50,6 @@ class App extends React.Component {
           <Route path='/shop' component={ShopPage} />
           <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/'/>) : (<SignInSignUpPage />)}/>
-          {/* <Route path='/testPage/:topicId' component={TestPage} /> */}
         </Switch>
       </div>
     );
@@ -62,11 +58,10 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector ({
   currentUser: selectCurrentUser,
-  // ADDING SHOP DATA TO FIREBASE collectionsArray: selectCollectionsForPreview
 });
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
